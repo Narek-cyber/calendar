@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Events\StoreEventRequest;
 use App\Models\User;
+use Google\Service\Calendar\Event;
 use Google\Service\Exception;
 use Google_Client;
 use Google_Service_Calendar;
+use Google_Service_Calendar_Event;
 use Google_Service_Oauth2;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -97,11 +100,58 @@ class GoogleServiceController extends Controller
         return view('dashboard', compact('user'));
     }
 
-    public function addGoogleCalendarEvent(Request $request)
+    public function addGoogleCalendarEvent(StoreEventRequest $request)
     {
         $user = auth()->user();
         $accessToken = $user->google_token;
         $this->client->setAccessToken($accessToken);
         $service = new Google_Service_Calendar($this->client);
+        $validated = $request->validated();
+//dd($service->calendars);
+//        $event = new Google_Service_Calendar_Event([
+//            'summary' => $validated['summary'],
+//            'location' => $validated['location'],
+//            'description' => $validated['description'],
+//            'start' => [
+//                'dateTime' => date('c', strtotime($validated['start'])),
+//                'timeZone' => 'America/Los_Angeles',
+//            ],
+//            'end' => [
+//                'dateTime' => date('c', strtotime($validated['end'])),
+//                'timeZone' => 'America/Los_Angeles',
+//            ],
+//        ]);
+
+//        $event = new Google_Service_Calendar_Event(array(
+//            'summary' => 'Google I/O 2024',
+//            'location' => '800 Howard St., San Francisco, CA 94103',
+//            'description' => 'A chance to hear more about Google\'s developer products.',
+//            'start' => array(
+//                'dateTime' => '2024-07-28T09:00:00-07:00',
+//                'timeZone' => 'America/Los_Angeles',
+//            ),
+//            'end' => array(
+//                'dateTime' => '2024-07-28T17:00:00-07:00',
+//                'timeZone' => 'America/Los_Angeles',
+//            ),
+//            'recurrence' => array(
+//                'RRULE:FREQ=DAILY;COUNT=10000'
+//            ),
+//            'attendees' => array(
+//                array('email' => 'lpage@example.com'),
+//                array('email' => 'sbrin@example.com'),
+//            ),
+//            'reminders' => array(
+//                'useDefault' => FALSE,
+//                'overrides' => array(
+//                    array('method' => 'email', 'minutes' => 24 * 60),
+//                    array('method' => 'popup', 'minutes' => 10),
+//                ),
+//            ),
+//        ));
+        // Insert the event into the user's calendar
+        //$calendarId = 'primary'; // Use 'primary' for the user's primary calendar
+//        $event1 = $service->events->insert($calendarId, $event);
+//        dd($service->calendars->get('primary'));
     }
 }

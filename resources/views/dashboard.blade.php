@@ -21,7 +21,12 @@
             @csrf
             <div class="mb-3">
                 <label for="summary" class="form-label">Event Summary</label>
-                <input type="text" class="form-control" id="summary" name="summary" >
+                <input type="text" class="form-control" id="summary" name="summary">
+                @error('summary')
+                    <span class="text-xs text-danger">
+                        {{ $message }}
+                    </span>
+                @enderror
             </div>
             <div class="mb-3">
                 <label for="location" class="form-label">Event Location</label>
@@ -33,11 +38,21 @@
             </div>
             <div class="mb-3">
                 <label for="start" class="form-label">Start Date and Time</label>
-                <input type="datetime-local" class="form-control" id="start" name="start" >
+                <input type="datetime-local" class="form-control" id="start" name="start">
+                @error('start')
+                    <span class="text-xs text-danger">
+                        {{ $message }}
+                    </span>
+                @enderror
             </div>
             <div class="mb-3">
                 <label for="end" class="form-label">End Date and Time</label>
-                <input type="datetime-local" class="form-control" id="end" name="end" >
+                <input type="datetime-local" class="form-control" id="end" name="end">
+                @error('end')
+                    <span class="text-xs text-danger">
+                        {{ $message }}
+                    </span>
+                @enderror
             </div>
             <button type="submit" class="btn btn-primary">Add Google Calendar Event</button>
         </form>
