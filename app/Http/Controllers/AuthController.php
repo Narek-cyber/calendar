@@ -24,7 +24,7 @@ class AuthController extends Controller
         $this->client->setClientId(env('GOOGLE_CLIENT_ID'));
         $this->client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
         $this->client->setRedirectUri(env('GOOGLE_REDIRECT'));
-//        $this->client->addScope('https://www.googleapis.com/auth/calendar.events.owned');
+        $this->client->addScope('https://www.googleapis.com/auth/calendar.events.owned');
         $this->client->addScope(Google_Service_Oauth2::USERINFO_PROFILE);
         $this->client->addScope(Google_Service_Oauth2::USERINFO_EMAIL);
         $this->client->addScope(Google_Service_Oauth2::OPENID);
