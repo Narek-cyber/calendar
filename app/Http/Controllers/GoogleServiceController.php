@@ -55,7 +55,6 @@ class GoogleServiceController extends Controller
     {
         if ($request->has('code')) {
             $token = $this->client->fetchAccessTokenWithAuthCode($request->get('code'));
-
             if (!array_key_exists('error', $token)) {
                 $this->client->setAccessToken($token);
                 $oauth2 = new Google_Service_Oauth2($this->client);
@@ -66,6 +65,11 @@ class GoogleServiceController extends Controller
                         'name' => $googleUser->name,
                         'email' => $googleUser->email,
                         'google_id' => $googleUser->id,
+                        'google_token' => $token['access_token'],
+                    ]);
+                } else {
+                    $localUser->update([
+                        'google_token' => $token['access_token']
                     ]);
                 }
                 Auth::login($localUser);
@@ -93,8 +97,11 @@ class GoogleServiceController extends Controller
         return view('dashboard', compact('user'));
     }
 
-    public function addGoogleCalendarEvent()
+    public function addGoogleCalendarEvent(Request $request)
     {
-        dd(1);
+        $user = auth()->user();
+        $accessToken = $user->google_token;
+        $this->client->setAccessToken($accessToken);
+        $service = new Google_Service_Calendar($this->client);
     }
 }
