@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GoogleServiceController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,8 +17,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('login', [AuthController::class, 'login'])->name('login');
-Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google.redirect');
-Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.handle');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+Route::get('login', [GoogleServiceController::class, 'login'])->name('login');
+Route::get('/auth/google', [GoogleServiceController::class, 'redirectToGoogle'])->name('auth.google.redirect');
+Route::get('/auth/google/callback', [GoogleServiceController::class, 'handleGoogleCallback'])->name('auth.google.handle');
+Route::get('/logout', [GoogleServiceController::class, 'logout'])->name('logout');
+
+Route::middleware('auth')->group(function () {
+    Route::get('dashboard', [GoogleServiceController::class, 'dashboard'])->name('dashboard');
+    Route::post('/add-event', [GoogleServiceController::class, 'addGoogleCalendarEvent'])->name('add.event');
+});

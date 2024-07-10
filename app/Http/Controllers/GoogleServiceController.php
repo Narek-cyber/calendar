@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 
-class AuthController extends Controller
+class GoogleServiceController extends Controller
 {
     public function __construct(
         private readonly Google_Client $client
@@ -91,5 +91,10 @@ class AuthController extends Controller
     {
         $user = auth()->user();
         return view('dashboard', compact('user'));
+    }
+
+    public function addGoogleCalendarEvent()
+    {
+        dd(1);
     }
 }
