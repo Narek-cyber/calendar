@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Google\Service\Exception;
 use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Oauth2;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -24,17 +30,28 @@ class AuthController extends Controller
         $this->client->addScope(Google_Service_Oauth2::OPENID);
     }
 
-    public function login()
+    /**
+     * @return Application|Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse
+     */
+    public function login(): Application|Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse
     {
         return redirect('/');
     }
 
-    public function redirectToGoogle()
+    /**
+     * @return RedirectResponse
+     */
+    public function redirectToGoogle(): RedirectResponse
     {
         return redirect()->to($this->client->createAuthUrl());
     }
 
-    public function handleGoogleCallback(Request $request)
+    /**
+     * @param Request $request
+     * @return Application|Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse
+     * @throws Exception
+     */
+    public function handleGoogleCallback(Request $request): Application|Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse
     {
         if ($request->has('code')) {
             $token = $this->client->fetchAccessTokenWithAuthCode($request->get('code'));
@@ -45,7 +62,7 @@ class AuthController extends Controller
                 $googleUser = $oauth2->userinfo->get();
                 $localUser = User::query()->where('email', $googleUser->email)->first();
                 if (!$localUser) {
-                    $localUser = User::create([
+                    $localUser = User::query()->create([
                         'name' => $googleUser->name,
                         'email' => $googleUser->email,
                         'google_id' => $googleUser->id,
@@ -56,29 +73,21 @@ class AuthController extends Controller
             }
         }
         return redirect('/');
-//        $this->client->authenticate($request->get('code'));
-
-//        dd($request->session()->get('oauth2state'), $request->get('state'));
-//        if ($request->session()->get('oauth2state') !== $request->get('state')) {
-//            return redirect('/')->with('error', 'Invalid state.');
-//        }
-//        $client = new Google_Client();
-//        $client->setClientId(env('GOOGLE_CLIENT_ID'));
-//        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
-//        $client->setRedirectUri(env('GOOGLE_REDIRECT'));
-//        $token = $client->fetchAccessTokenWithAuthCode($request->get('code'));
-//        $request->session()->put('access_token', $token);
-
-//        return view('dashboard');
     }
 
-    public function logout()
+    /**
+     * @return Application|Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse
+     */
+    public function logout(): Application|Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse
     {
         Auth::logout();
         return redirect('/');
     }
 
-    public function dashboard()
+    /**
+     * @return Factory|Application|View|\Illuminate\Contracts\Foundation\Application
+     */
+    public function dashboard(): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
         $user = auth()->user();
         return view('dashboard', compact('user'));
