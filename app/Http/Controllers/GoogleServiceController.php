@@ -70,11 +70,8 @@ class GoogleServiceController extends Controller
                         'google_id' => $googleUser->id,
                         'google_token' => $token['access_token'],
                     ]);
-                } else {
-                    $localUser->update([
-                        'google_token' => $token['access_token']
-                    ]);
                 }
+
                 Auth::login($localUser);
                 return redirect()->route('dashboard');
             }
@@ -103,7 +100,7 @@ class GoogleServiceController extends Controller
     public function addGoogleCalendarEvent(StoreEventRequest $request)
     {
         $user = auth()->user();
-        $accessToken = $user->google_token;
+        $accessToken = $user->{'google_token'};
         $this->client->setAccessToken($accessToken);
         $service = new Google_Service_Calendar($this->client);
         $validated = $request->validated();
