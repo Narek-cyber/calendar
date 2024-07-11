@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Services\GoogleService;
+use App\Http\Services\Google\GoogleService;
 use App\Models\User;
 use Google\Service\Exception;
-use Google_Client;
 use Google_Service_Oauth2;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;

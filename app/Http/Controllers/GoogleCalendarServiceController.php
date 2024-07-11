@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Events\StoreEventRequest;
 use App\Http\Requests\Events\UpdateEventRequest;
-use App\Http\Services\GoogleService;
+use App\Http\Services\Google\GoogleService;
 use App\Models\GoogleEvent;
 use Google\Service\Exception;
 use Google_Service_Calendar;
