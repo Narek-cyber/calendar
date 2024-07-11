@@ -26,5 +26,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [GoogleServiceController::class, 'dashboard'])->name('dashboard');
     Route::post('/add-event', [GoogleServiceController::class, 'addGoogleCalendarEvent'])->name('add.event');
     Route::get('/edit-event/{id}', [GoogleServiceController::class, 'editGoogleCalendarEvent'])->name('edit.event');
+    Route::put('/update-event/{id}', [GoogleServiceController::class, 'updateGoogleCalendarEvent'])->name('update.event');
     Route::delete('/event/{id}', [GoogleServiceController::class, 'delete'])->name('event.delete');
 });

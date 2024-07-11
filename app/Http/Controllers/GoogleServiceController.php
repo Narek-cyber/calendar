@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Events\StoreEventRequest;
+use App\Http\Requests\Events\UpdateEventRequest;
 use App\Models\GoogleEvent;
 use App\Models\User;
 use Google\Service\Calendar\Event;
@@ -149,9 +150,53 @@ class GoogleServiceController extends Controller
         return redirect()->back()->with('success', 'Event added successfully.');
     }
 
-    public function editGoogleCalendarEvent($id)
+    /**
+     * @param $id
+     * @return Factory|Application|View|\Illuminate\Contracts\Foundation\Application
+     */
+    public function editGoogleCalendarEvent($id): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
-        return view('dashboard.edit');
+        $user = auth()->user();
+        $event = GoogleEvent::query()->findOrFail($id);
+        return view('dashboard.edit', compact('user', 'event'));
+    }
+
+    /**
+     * @param UpdateEventRequest $request
+     * @param $id
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function updateGoogleCalendarEvent(UpdateEventRequest $request, $id): RedirectResponse
+    {
+        $service = $this->getGoogleService();
+        $validated = $request->validated();
+        $event = GoogleEvent::query()->findOrFail($id);
+        $googleEvent = new Google_Service_Calendar_Event([
+            'summary' => $validated['summary'],
+            'location' => $validated['location'],
+            'description' => $validated['description'],
+            'start' => [
+                'dateTime' => date('c', strtotime($validated['start'])),
+                'timeZone' => 'America/Los_Angeles',
+            ],
+            'end' => [
+                'dateTime' => date('c', strtotime($validated['end'])),
+                'timeZone' => 'America/Los_Angeles',
+            ],
+        ]);
+
+        $service->events->update('primary', $event->{'event_id'}, $googleEvent);
+
+        $event->update([
+            'summary' => $validated['summary'],
+            'location' => $validated['location'],
+            'description' => $validated['description'],
+            'start' => $validated['start'],
+            'end' => $validated['end'],
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Event updated successfully.');
     }
 
     /**

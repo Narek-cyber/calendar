@@ -1,8 +1,12 @@
 @extends('layouts.layout')
 @section('content')
     <div class="container">
-    <form action="{{ route('add.event') }}" method="POST">
+    <form
+        action="{{ route('update.event', $event->id) }}"
+        method="POST"
+    >
         @csrf
+        @method('PUT')
         <div class="mb-3">
             <label
                 for="summary"
@@ -15,11 +19,11 @@
                 class="form-control"
                 id="summary"
                 name="summary"
-                value="{{ old('summary') }}"
+                value="{{ $event->summary ?? old('summary') }}"
             >
             @error('summary')
                 <span class="text-xs text-danger">
-                        {{ $message }}
+                    {{ $message }}
                 </span>
             @enderror
         </div>
@@ -35,7 +39,7 @@
                 class="form-control"
                 id="location"
                 name="location"
-                value="{{ old('location') }}"
+                value="{{ $event->location ?? old('location') }}"
             >
         </div>
         <div class="mb-3">
@@ -47,7 +51,7 @@
             <textarea
                 class="form-control"
                 id="description"
-                name="description">{{ old('description') }}</textarea>
+                name="description">{{ $event->description ?? old('description') }}</textarea>
         </div>
         <div class="mb-3">
             <label
@@ -61,12 +65,12 @@
                 class="form-control"
                 id="start"
                 name="start"
-                value="{{ old('start') }}"
+                value="{{ $event->start ?? old('start') }}"
             >
             @error('start')
-            <span class="text-xs text-danger">
-                        {{ $message }}
-                    </span>
+                <span class="text-xs text-danger">
+                    {{ $message }}
+                </span>
             @enderror
         </div>
         <div class="mb-3">
@@ -81,15 +85,20 @@
                 class="form-control"
                 id="end"
                 name="end"
-                value="{{ old('end') }}"
+                value="{{ $event->end ?? old('end') }}"
             >
             @error('end')
-            <span class="text-xs text-danger">
-                        {{ $message }}
-                    </span>
+                <span class="text-xs text-danger">
+                    {{ $message }}
+                </span>
             @enderror
         </div>
-        <button type="submit" class="btn btn-primary">Add Google Calendar Event</button>
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Edit Google Calendar Event
+        </button>
     </form>
     </div>
 @endsection
