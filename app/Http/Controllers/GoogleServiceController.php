@@ -107,7 +107,7 @@ class GoogleServiceController extends Controller
     {
         $user = auth()->user();
         $events = $user->events()->orderBy('created_at', 'desc')->get();
-        return view('dashboard', compact('user', 'events'));
+        return view('dashboard.index', compact('user', 'events'));
     }
 
     /**
