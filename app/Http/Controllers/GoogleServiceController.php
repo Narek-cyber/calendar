@@ -33,6 +33,7 @@ class GoogleServiceController extends Controller
         $this->client->addScope(Google_Service_Oauth2::USERINFO_PROFILE);
         $this->client->addScope(Google_Service_Oauth2::USERINFO_EMAIL);
         $this->client->addScope(Google_Service_Oauth2::OPENID);
+        $this->client->setAccessType('offline');
     }
 
     /**
