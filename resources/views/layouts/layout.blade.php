@@ -15,6 +15,7 @@
         <div class="col-8">
             <h1 class="d-inline">Welcome to Dashboard</h1>
             <h3>{{ $user->name }}</h3>
+            <p>{{ $user->email }}</p>
         </div>
         <div class="col-4 text-right">
             <form action="{{ route('logout') }}" method="GET" class="d-inline">

@@ -46,7 +46,8 @@
             <label
                 for="description"
                 class="form-label"
-            >Event Description
+            >
+                Event Description
             </label>
             <textarea
                 class="form-control"
