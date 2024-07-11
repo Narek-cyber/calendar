@@ -17,7 +17,7 @@
             @endif
             @if(session()->has('error'))
                 <div
-                    class="alert alert-error alert-dismissible fade show"
+                    class="alert alert-danger alert-dismissible fade show"
                     role="alert"
                 >
                     <span class="complete_endorsement">{{ session('error') }}</span>

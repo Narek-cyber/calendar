@@ -4,20 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Events\StoreEventRequest;
 use App\Http\Requests\Events\UpdateEventRequest;
+use App\Http\Services\Google\GoogleCalendarEventService;
 use App\Http\Services\Google\GoogleService;
-use App\Models\GoogleEvent;
-use Google\Service\Exception;
 use Google_Service_Calendar;
-use Google_Service_Calendar_Event;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class GoogleCalendarServiceController extends Controller
 {
     public function __construct(
-        protected GoogleService $googleService
+        protected GoogleService $googleService,
+        protected GoogleCalendarEventService $googleEvent
     )
     {
         //
@@ -37,40 +38,22 @@ class GoogleCalendarServiceController extends Controller
     /**
      * @param StoreEventRequest $request
      * @return RedirectResponse
-     * @throws Exception
      */
     public function addGoogleCalendarEvent(StoreEventRequest $request): RedirectResponse
     {
-        $service = $this->getGoogleService();
-        $validated = $request->validated();
-
-        $event = new Google_Service_Calendar_Event([
-            'summary' => $validated['summary'],
-            'location' => $validated['location'],
-            'description' => $validated['description'],
-            'start' => [
-                'dateTime' => date('c', strtotime($validated['start'])),
-                'timeZone' => 'America/Los_Angeles',
-            ],
-            'end' => [
-                'dateTime' => date('c', strtotime($validated['end'])),
-                'timeZone' => 'America/Los_Angeles',
-            ],
-        ]);
-
-        $calendarId = 'primary';
-        $eventGoogle = $service->events->insert($calendarId, $event);
-
-        GoogleEvent::query()->create([
-            'user_id' => auth()->id(),
-            'event_id' => $eventGoogle->id,
-            'summary' => $validated['summary'],
-            'location' => $validated['location'],
-            'description' => $validated['description'],
-            'start' => $validated['start'],
-            'end' => $validated['end'],
-        ]);
-        return redirect()->back()->with('success', 'Event added successfully.');
+        try {
+            $service = $this->getGoogleService();
+            $validated = $request->validated();
+            $data = [
+                'service' => $service,
+                'validated' => $validated,
+            ];
+            $this->googleEvent->storeEvent($data);
+            return redirect()->back()->with('success', 'Event added successfully.');
+        } catch (Exception $e) {
+            Log::error(__CLASS__ . '::' . __FUNCTION__ . "->" . $e->getMessage());
+            return redirect()->back()->with('error', 'Try again.');
+        }
     }
 
     /**
@@ -80,7 +63,7 @@ class GoogleCalendarServiceController extends Controller
     public function editGoogleCalendarEvent($id): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
         $user = auth()->user();
-        $event = GoogleEvent::query()->findOrFail($id);
+        $event = $this->googleEvent->findEvent($id);
         return view('dashboard.edit', compact('user', 'event'));
     }
 
@@ -88,38 +71,24 @@ class GoogleCalendarServiceController extends Controller
      * @param UpdateEventRequest $request
      * @param $id
      * @return RedirectResponse
-     * @throws Exception
      */
     public function updateGoogleCalendarEvent(UpdateEventRequest $request, $id): RedirectResponse
     {
-        $service = $this->getGoogleService();
-        $validated = $request->validated();
-        $event = GoogleEvent::query()->findOrFail($id);
-        $googleEvent = new Google_Service_Calendar_Event([
-            'summary' => $validated['summary'],
-            'location' => $validated['location'],
-            'description' => $validated['description'],
-            'start' => [
-                'dateTime' => date('c', strtotime($validated['start'])),
-                'timeZone' => 'America/Los_Angeles',
-            ],
-            'end' => [
-                'dateTime' => date('c', strtotime($validated['end'])),
-                'timeZone' => 'America/Los_Angeles',
-            ],
-        ]);
-
-        $service->events->update('primary', $event->{'event_id'}, $googleEvent);
-
-        $event->update([
-            'summary' => $validated['summary'],
-            'location' => $validated['location'],
-            'description' => $validated['description'],
-            'start' => $validated['start'],
-            'end' => $validated['end'],
-        ]);
-
-        return redirect()->route('dashboard')->with('success', 'Event updated successfully.');
+        try {
+            $service = $this->getGoogleService();
+            $validated = $request->validated();
+            $event = $this->googleEvent->findEvent($id);
+            $data = [
+                'service' => $service,
+                'validated' => $validated,
+                'event' => $event,
+            ];
+            $this->googleEvent->updateEvent($data);
+            return redirect()->route('dashboard')->with('success', 'Event updated successfully.');
+        } catch (Exception $e) {
+            Log::error(__CLASS__ . '::' . __FUNCTION__ . "->" . $e->getMessage());
+            return redirect()->back()->with('error', 'Try again.');
+        }
     }
 
     /**
@@ -129,10 +98,18 @@ class GoogleCalendarServiceController extends Controller
      */
     public function delete($id): RedirectResponse
     {
-        $service = $this->getGoogleService();
-        $event = GoogleEvent::query()->findOrFail($id);
-        $service->events->delete('primary', $event->{'event_id'});
-        $event->delete();
-        return redirect()->back()->with('success', 'Event deleted successfully.');
+        try {
+            $service = $this->getGoogleService();
+            $event = $this->googleEvent->findEvent($id);
+            $data = [
+                'service' => $service,
+                'event' => $event,
+            ];
+            $this->googleEvent->deleteEvent($data);
+            return redirect()->back()->with('success', 'Event deleted successfully.');
+        } catch (Exception $e) {
+            Log::error(__CLASS__ . '::' . __FUNCTION__ . "->" . $e->getMessage());
+            return redirect()->back()->with('error', 'Try again.');
+        }
     }
 }
