@@ -149,6 +149,11 @@ class GoogleServiceController extends Controller
         return redirect()->back()->with('success', 'Event added successfully.');
     }
 
+    public function editGoogleCalendarEvent($id)
+    {
+        return view('dashboard.edit');
+    }
+
     /**
      * @param $id
      * @return RedirectResponse

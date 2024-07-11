@@ -136,7 +136,13 @@
                     <td>{{ $event->description }}</td>
                     <td>{{ $event->start }}</td>
                     <td>{{ $event->end }}</td>
-                    <td>
+                    <td class="d-flex">
+                        <a
+                            class="btn btn-success btn-sm"
+                            href="{{ route('edit.event', $event->id) }}"
+                        >
+                            Edit
+                        </a>
                         <form
                             action="{{ route('event.delete', $event->id) }}"
                             method="POST"
