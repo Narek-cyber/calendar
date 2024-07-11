@@ -57,4 +57,60 @@
             <button type="submit" class="btn btn-primary">Add Google Calendar Event</button>
         </form>
     </div>
+    <div class="container mt-5">
+        <h2>Google Events List</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Summary</th>
+                <th scope="col">Location</th>
+                <th scope="col">Description</th>
+                <th scope="col">Start</th>
+                <th scope="col">End</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @forelse($events as $key => $event)
+                <tr>
+                    <th scope="row">{{ $key + 1 }}</th>
+                    <td>{{ $event->summary }}</td>
+                    <td>{{ $event->location }}</td>
+                    <td>{{ $event->description }}</td>
+                    <td>{{ $event->start }}</td>
+                    <td>{{ $event->end }}</td>
+                    <td>
+                        <form
+                            action="{{ route('event.delete', $event->id) }}"
+                            method="POST"
+                        >
+                            @csrf
+                            @method('DELETE')
+                            <button
+                                type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure?')"
+                            >
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td>
+                        <p style="font-weight: bolder">No events yet</p>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
+    </div>
+
 @endsection

@@ -25,4 +25,5 @@ Route::get('/logout', [GoogleServiceController::class, 'logout'])->name('logout'
 Route::middleware('auth')->group(function () {
     Route::get('dashboard', [GoogleServiceController::class, 'dashboard'])->name('dashboard');
     Route::post('/add-event', [GoogleServiceController::class, 'addGoogleCalendarEvent'])->name('add.event');
+    Route::delete('/event/{id}', [GoogleServiceController::class, 'delete'])->name('event.delete');
 });
