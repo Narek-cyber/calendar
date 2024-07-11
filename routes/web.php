@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\GoogleAuthServiceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleServiceController;
+use App\Http\Controllers\GoogleCalendarServiceController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,15 +19,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', [GoogleServiceController::class, 'login'])->name('login');
-Route::get('/auth/google', [GoogleServiceController::class, 'redirectToGoogle'])->name('auth.google.redirect');
-Route::get('/auth/google/callback', [GoogleServiceController::class, 'handleGoogleCallback'])->name('auth.google.handle');
-Route::get('/logout', [GoogleServiceController::class, 'logout'])->name('logout');
+Route::get('/login', [GoogleAuthServiceController::class, 'login'])->name('login');
+Route::get('/auth/google', [GoogleAuthServiceController::class, 'redirectToGoogle'])->name('auth.google.redirect');
+Route::get('/auth/google/callback', [GoogleAuthServiceController::class, 'handleGoogleCallback'])->name('auth.google.handle');
+Route::get('/logout', [GoogleAuthServiceController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [GoogleServiceController::class, 'dashboard'])->name('dashboard');
-    Route::post('/add-event', [GoogleServiceController::class, 'addGoogleCalendarEvent'])->name('add.event');
-    Route::get('/edit-event/{id}', [GoogleServiceController::class, 'editGoogleCalendarEvent'])->name('edit.event');
-    Route::put('/update-event/{id}', [GoogleServiceController::class, 'updateGoogleCalendarEvent'])->name('update.event');
-    Route::delete('/event/{id}', [GoogleServiceController::class, 'delete'])->name('event.delete');
+    Route::get('/dashboard', [GoogleAuthServiceController::class, 'dashboard'])->name('dashboard');
+    Route::post('/add-event', [GoogleCalendarServiceController::class, 'addGoogleCalendarEvent'])->name('add.event');
+    Route::get('/edit-event/{id}', [GoogleCalendarServiceController::class, 'editGoogleCalendarEvent'])->name('edit.event');
+    Route::put('/update-event/{id}', [GoogleCalendarServiceController::class, 'updateGoogleCalendarEvent'])->name('update.event');
+    Route::delete('/event/{id}', [GoogleCalendarServiceController::class, 'delete'])->name('event.delete');
 });
