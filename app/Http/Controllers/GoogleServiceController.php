@@ -43,6 +43,17 @@ class GoogleServiceController extends Controller
     }
 
     /**
+     * @return Google_Service_Calendar
+     */
+    private function getGoogleService(): Google_Service_Calendar
+    {
+        $user = auth()->user();
+        $accessToken = $user->{'google_token'};
+        $this->client->setAccessToken($accessToken);
+        return new Google_Service_Calendar($this->client);
+    }
+
+    /**
      * @return RedirectResponse
      */
     public function redirectToGoogle(): RedirectResponse
@@ -99,12 +110,14 @@ class GoogleServiceController extends Controller
         return view('dashboard', compact('user', 'events'));
     }
 
-    public function addGoogleCalendarEvent(StoreEventRequest $request)
+    /**
+     * @param StoreEventRequest $request
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function addGoogleCalendarEvent(StoreEventRequest $request): RedirectResponse
     {
-        $user = auth()->user();
-        $accessToken = $user->{'google_token'};
-        $this->client->setAccessToken($accessToken);
-        $service = new Google_Service_Calendar($this->client);
+        $service = $this->getGoogleService();
         $validated = $request->validated();
 
         $event = new Google_Service_Calendar_Event([
@@ -136,14 +149,16 @@ class GoogleServiceController extends Controller
         return redirect()->back();
     }
 
-    public function delete($id)
+    /**
+     * @param $id
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function delete($id): RedirectResponse
     {
-        $user = auth()->user();
-        $accessToken = $user->{'google_token'};
-        $this->client->setAccessToken($accessToken);
+        $service = $this->getGoogleService();
         $event = GoogleEvent::query()->findOrFail($id);
-        $service = new Google_Service_Calendar($this->client);
-        $service->events->delete('primary', $event->event_id);
+        $service->events->delete('primary', $event->{'event_id'});
         $event->delete();
         return redirect()->back();
     }
