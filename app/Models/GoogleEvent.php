@@ -11,6 +11,7 @@ class GoogleEvent extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
+        'event_id',
         'summary',
         'location',
         'description',

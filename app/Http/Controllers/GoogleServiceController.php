@@ -122,9 +122,11 @@ class GoogleServiceController extends Controller
         ]);
 
         $calendarId = 'primary';
-        $service->events->insert($calendarId, $event);
+        $eventGoogle = $service->events->insert($calendarId, $event);
+
         GoogleEvent::query()->create([
             'user_id' => auth()->id(),
+            'event_id' => $eventGoogle->id,
             'summary' => $validated['summary'],
             'location' => $validated['location'],
             'description' => $validated['description'],
@@ -136,7 +138,13 @@ class GoogleServiceController extends Controller
 
     public function delete($id)
     {
-        GoogleEvent::query()->findOrFail($id)->delete();
+        $user = auth()->user();
+        $accessToken = $user->{'google_token'};
+        $this->client->setAccessToken($accessToken);
+        $event = GoogleEvent::query()->findOrFail($id);
+        $service = new Google_Service_Calendar($this->client);
+        $service->events->delete('primary', $event->event_id);
+        $event->delete();
         return redirect()->back();
     }
 }

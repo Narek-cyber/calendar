@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('google_events', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('event_id')->nullable();
             $table->string('summary');
             $table->string('location')->nullable();
             $table->text('description')->nullable();
