@@ -1,6 +1,7 @@
 @extends('layouts.layout')
 @section('content')
     <div class="container-fluid text-center">
+        @include('messages.message')
         <div class="row align-items-center">
             <div class="col-8">
                 <h1 class="d-inline">Welcome to Dashboard</h1>

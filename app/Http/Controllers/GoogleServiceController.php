@@ -146,7 +146,7 @@ class GoogleServiceController extends Controller
             'start' => $validated['start'],
             'end' => $validated['end'],
         ]);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Event added successfully.');
     }
 
     /**
@@ -160,6 +160,6 @@ class GoogleServiceController extends Controller
         $event = GoogleEvent::query()->findOrFail($id);
         $service->events->delete('primary', $event->{'event_id'});
         $event->delete();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Event deleted successfully.');
     }
 }
