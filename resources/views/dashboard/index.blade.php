@@ -1,3 +1,4 @@
+{{--@dd($timsezones)--}}
 @extends('layouts.layout')
 @section('content')
     <div class="container">
@@ -88,6 +89,19 @@
                         {{ $message }}
                     </span>
                 @enderror
+            </div>
+            <div class="mb-3">
+                @if(!empty($timsezones))
+                    <select
+                        class="form-select"
+                        aria-label="Default select example"
+                        name="timezone"
+                    >
+                        @foreach($timsezones as $timezone)
+                            <option value="{{$timezone->code}}">{{ $timezone->name }}</option>
+                        @endforeach
+                    </select>
+                @endif
             </div>
             <button type="submit" class="btn btn-primary">Add Google Calendar Event</button>
         </form>

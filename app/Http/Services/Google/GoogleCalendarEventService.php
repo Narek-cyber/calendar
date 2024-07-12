@@ -24,8 +24,29 @@ class GoogleCalendarEventService
      */
     public function storeEvent($data): void
     {
+        // Use the user-provided timezone if available, otherwise use the default application timezone
+
+
+        $startDateTime = new DateTime($validated['start'], new DateTimeZone($timezone));
+        $endDateTime = new DateTime($validated['end'], new DateTimeZone($timezone));
+
+        $event = new Google_Service_Calendar_Event([
+            'summary' => $validated['summary'],
+            'location' => $validated['location'],
+            'description' => $validated['description'],
+            'start' => [
+                'dateTime' => $startDateTime->format('c'),
+                'timeZone' => $timezone,
+            ],
+            'end' => [
+                'dateTime' => $endDateTime->format('c'),
+                'timeZone' => $timezone,
+            ],
+        ]);
+
         $service = $data['service'];
         $validated = $data['validated'];
+        $timezone = $validated['timezone'] ?? config('app.timezone');
 
         $event = new Google_Service_Calendar_Event([
             'summary' => $validated['summary'],

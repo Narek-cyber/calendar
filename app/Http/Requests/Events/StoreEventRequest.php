@@ -27,6 +27,7 @@ class StoreEventRequest extends FormRequest
             'start' => ['required', 'date', 'after_or_equal:now', 'before:end'],
             'end' => ['required', 'date', 'after:start'],
             'description' => ['nullable', 'string'],
+            'timezone' => ['nullable', 'string'],
         ];
     }
 }

@@ -13,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class GoogleAuthServiceController extends Controller
 {
@@ -30,7 +31,8 @@ class GoogleAuthServiceController extends Controller
     {
         $user = auth()->user();
         $events = $user->events()->orderBy('created_at', 'desc')->get();
-        return view('dashboard.index', compact('user', 'events'));
+        $timsezones = DB::table('timezones')->select('*')->orderBy('name')->get();
+        return view('dashboard.index', compact('user', 'events', 'timsezones'));
     }
 
     /**
