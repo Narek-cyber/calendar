@@ -70,6 +70,10 @@ class GoogleAuthServiceController extends Controller
                         'google_id' => $googleUser->id,
                         'google_token' => json_encode($token),
                     ]);
+                } else {
+                    $localUser->update([
+                        'google_token' => json_encode($token),
+                    ]);
                 }
 
                 Auth::login($localUser);
@@ -84,6 +88,9 @@ class GoogleAuthServiceController extends Controller
      */
     public function logout(): Application|Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse
     {
+        $user = auth()->user();
+        $user->{'google_token'} = null;
+        $user->save();
         Auth::logout();
         return redirect('/');
     }
