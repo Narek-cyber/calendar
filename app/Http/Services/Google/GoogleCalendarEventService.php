@@ -21,6 +21,11 @@ class GoogleCalendarEventService
         return GoogleEvent::query()->findOrFail($id);
     }
 
+    /**
+     * @param array $validated
+     * @return Google_Service_Calendar_Event
+     * @throws Exception
+     */
     private function createGoogleCalendarEvent(array $validated): Google_Service_Calendar_Event
     {
         $timezone = $validated['timezone'] ?? config('app.timezone');
@@ -69,6 +74,7 @@ class GoogleCalendarEventService
     /**
      * @param $data
      * @return void
+     * @throws Exception
      */
     public function updateEvent($data): void
     {
