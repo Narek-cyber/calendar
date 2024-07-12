@@ -94,6 +94,26 @@
                 </span>
             @enderror
         </div>
+        <div class="mb-3">
+            @if(!empty($timezones))
+                <select
+                    class="form-select"
+                    aria-label="Default select example"
+                    name="timezone"
+                >
+                    @foreach($timezones as $timezone)
+                        <option
+                            value="{{ $timezone->code }}"
+                            @if($event->timezone_code == $timezone->code)
+                                selected
+                            @endif
+                        >
+                            {{ $timezone->name }}
+                        </option>
+                    @endforeach
+                </select>
+            @endif
+        </div>
         <button
             type="submit"
             class="btn btn-primary"

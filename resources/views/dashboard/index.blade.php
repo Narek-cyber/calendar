@@ -91,14 +91,18 @@
                 @enderror
             </div>
             <div class="mb-3">
-                @if(!empty($timsezones))
+                @if(!empty($timezones))
                     <select
                         class="form-select"
                         aria-label="Default select example"
                         name="timezone"
                     >
-                        @foreach($timsezones as $timezone)
-                            <option value="{{$timezone->code}}">{{ $timezone->name }}</option>
+                        @foreach($timezones as $timezone)
+                            <option
+                                value="{{ $timezone->code }}"
+                            >
+                                {{ $timezone->name }}
+                            </option>
                         @endforeach
                     </select>
                 @endif

@@ -9,7 +9,7 @@ use Google_Service_Calendar_Event;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-
+use Exception;
 class GoogleCalendarEventService
 {
     /**
@@ -20,9 +20,11 @@ class GoogleCalendarEventService
     {
         return GoogleEvent::query()->findOrFail($id);
     }
+
     /**
      * @param $data
      * @return void
+     * @throws Exception
      */
     public function storeEvent($data): void
     {
@@ -57,6 +59,7 @@ class GoogleCalendarEventService
             'description' => $validated['description'],
             'start' => $validated['start'],
             'end' => $validated['end'],
+            'timezone_code' => $validated['timezone'],
         ]);
     }
 
@@ -69,18 +72,21 @@ class GoogleCalendarEventService
         $service = $data['service'];
         $validated = $data['validated'];
         $event = $data['event'];
+        $timezone = $validated['timezone'] ?? config('app.timezone');
+        $startDateTime = new DateTime($validated['start'], new DateTimeZone($timezone));
+        $endDateTime = new DateTime($validated['end'], new DateTimeZone($timezone));
 
         $googleEvent = new Google_Service_Calendar_Event([
             'summary' => $validated['summary'],
             'location' => $validated['location'],
             'description' => $validated['description'],
             'start' => [
-                'dateTime' => date('c', strtotime($validated['start'])),
-                'timeZone' => 'Asia/Yerevan',
+                'dateTime' => $startDateTime->format('c'),
+                'timeZone' => $timezone,
             ],
             'end' => [
-                'dateTime' => date('c', strtotime($validated['end'])),
-                'timeZone' => 'Asia/Yerevan',
+                'dateTime' => $endDateTime->format('c'),
+                'timeZone' => $timezone,
             ],
         ]);
 
@@ -92,6 +98,7 @@ class GoogleCalendarEventService
             'description' => $validated['description'],
             'start' => $validated['start'],
             'end' => $validated['end'],
+            'timezone_code' => $validated['timezone'],
         ]);
     }
 

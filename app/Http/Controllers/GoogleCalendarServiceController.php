@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
@@ -70,7 +71,8 @@ class GoogleCalendarServiceController extends Controller
     {
         $user = auth()->user();
         $event = $this->googleEvent->findEvent($id);
-        return view('dashboard.edit', compact('user', 'event'));
+        $timezones = DB::table('timezones')->select('*')->orderBy('name')->get();
+        return view('dashboard.edit', compact('user', 'event', 'timezones'));
     }
 
     /**

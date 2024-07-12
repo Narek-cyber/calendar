@@ -27,6 +27,7 @@ class UpdateEventRequest extends FormRequest
             'start' => ['required', 'date', 'before:end'],
             'end' => ['required', 'date', 'after:start'],
             'description' => ['nullable', 'string'],
+            'timezone' => ['nullable', 'string'],
         ];
     }
 }

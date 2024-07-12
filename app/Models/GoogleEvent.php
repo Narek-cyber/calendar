@@ -17,6 +17,7 @@ class GoogleEvent extends Model
         'description',
         'start',
         'end',
+        'timezone_code',
     ];
 
     /**
