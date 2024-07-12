@@ -3,6 +3,8 @@
 namespace App\Http\Services\Google;
 
 use App\Models\GoogleEvent;
+use DateTime;
+use DateTimeZone;
 use Google_Service_Calendar_Event;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -24,9 +26,9 @@ class GoogleCalendarEventService
      */
     public function storeEvent($data): void
     {
-        // Use the user-provided timezone if available, otherwise use the default application timezone
-
-
+        $service = $data['service'];
+        $validated = $data['validated'];
+        $timezone = $validated['timezone'] ?? config('app.timezone');
         $startDateTime = new DateTime($validated['start'], new DateTimeZone($timezone));
         $endDateTime = new DateTime($validated['end'], new DateTimeZone($timezone));
 
@@ -41,24 +43,6 @@ class GoogleCalendarEventService
             'end' => [
                 'dateTime' => $endDateTime->format('c'),
                 'timeZone' => $timezone,
-            ],
-        ]);
-
-        $service = $data['service'];
-        $validated = $data['validated'];
-        $timezone = $validated['timezone'] ?? config('app.timezone');
-
-        $event = new Google_Service_Calendar_Event([
-            'summary' => $validated['summary'],
-            'location' => $validated['location'],
-            'description' => $validated['description'],
-            'start' => [
-                'dateTime' => date('c', strtotime($validated['start'])),
-                'timeZone' => 'Asia/Yerevan',
-            ],
-            'end' => [
-                'dateTime' => date('c', strtotime($validated['end'])),
-                'timeZone' => 'Asia/Yerevan',
             ],
         ]);
 
