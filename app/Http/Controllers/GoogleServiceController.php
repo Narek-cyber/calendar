@@ -50,8 +50,14 @@ class GoogleServiceController extends Controller
     private function getGoogleService(): Google_Service_Calendar
     {
         $user = auth()->user();
-        $accessToken = $user->{'google_token'};
+        $accessToken = json_decode($user->{'google_token'}, true);
         $this->client->setAccessToken($accessToken);
+
+        if ($this->client->isAccessTokenExpired()) {
+            $newToken = $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
+            $this->client->setAccessToken($newToken);
+            $user->update(['google_token' => json_encode($newToken)]);
+        }
         return new Google_Service_Calendar($this->client);
     }
 
@@ -82,7 +88,7 @@ class GoogleServiceController extends Controller
                         'name' => $googleUser->name,
                         'email' => $googleUser->email,
                         'google_id' => $googleUser->id,
-                        'google_token' => $token['access_token'],
+                        'google_token' => json_encode($token),
                     ]);
                 }
 
