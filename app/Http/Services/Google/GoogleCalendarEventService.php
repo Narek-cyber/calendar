@@ -18,16 +18,14 @@ class GoogleCalendarEventService
     {
         return GoogleEvent::query()->findOrFail($id);
     }
-    /**
-     * @param $data
-     * @return void
-     */
-    public function storeEvent($data): void
-    {
-        $service = $data['service'];
-        $validated = $data['validated'];
 
-        $event = new Google_Service_Calendar_Event([
+    /**
+     * @param array $validated
+     * @return Google_Service_Calendar_Event
+     */
+    private static function createGoogleCalendarEvent(array $validated): Google_Service_Calendar_Event
+    {
+        return new Google_Service_Calendar_Event([
             'summary' => $validated['summary'],
             'location' => $validated['location'],
             'description' => $validated['description'],
@@ -40,9 +38,18 @@ class GoogleCalendarEventService
                 'timeZone' => 'Asia/Yerevan',
             ],
         ]);
+    }
 
-        $calendarId = 'primary';
-        $eventGoogle = $service->events->insert($calendarId, $event);
+    /**
+     * @param $data
+     * @return void
+     */
+    public function storeEvent($data): void
+    {
+        $service = $data['service'];
+        $validated = $data['validated'];
+        $event = self::createGoogleCalendarEvent($validated);
+        $eventGoogle = $service->events->insert('primary', $event);
 
         GoogleEvent::query()->create([
             'user_id' => auth()->id(),
@@ -64,20 +71,7 @@ class GoogleCalendarEventService
         $service = $data['service'];
         $validated = $data['validated'];
         $event = $data['event'];
-
-        $googleEvent = new Google_Service_Calendar_Event([
-            'summary' => $validated['summary'],
-            'location' => $validated['location'],
-            'description' => $validated['description'],
-            'start' => [
-                'dateTime' => date('c', strtotime($validated['start'])),
-                'timeZone' => 'Asia/Yerevan',
-            ],
-            'end' => [
-                'dateTime' => date('c', strtotime($validated['end'])),
-                'timeZone' => 'Asia/Yerevan',
-            ],
-        ]);
+        $googleEvent = self::createGoogleCalendarEvent($validated);
 
         $service->events->update('primary', $event->{'event_id'}, $googleEvent);
 
