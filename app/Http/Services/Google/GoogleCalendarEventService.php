@@ -33,11 +33,11 @@ class GoogleCalendarEventService
             'description' => $validated['description'],
             'start' => [
                 'dateTime' => date('c', strtotime($validated['start'])),
-                'timeZone' => 'America/Los_Angeles',
+                'timeZone' => 'Asia/Yerevan',
             ],
             'end' => [
                 'dateTime' => date('c', strtotime($validated['end'])),
-                'timeZone' => 'America/Los_Angeles',
+                'timeZone' => 'Asia/Yerevan',
             ],
         ]);
 
@@ -71,11 +71,11 @@ class GoogleCalendarEventService
             'description' => $validated['description'],
             'start' => [
                 'dateTime' => date('c', strtotime($validated['start'])),
-                'timeZone' => 'America/Los_Angeles',
+                'timeZone' => 'Asia/Yerevan',
             ],
             'end' => [
                 'dateTime' => date('c', strtotime($validated['end'])),
-                'timeZone' => 'America/Los_Angeles',
+                'timeZone' => 'Asia/Yerevan',
             ],
         ]);
 
