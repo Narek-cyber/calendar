@@ -68,7 +68,7 @@ class GoogleAuthServiceController extends Controller
                         'name' => $googleUser->name,
                         'email' => $googleUser->email,
                         'google_id' => $googleUser->id,
-                        'google_token' => $token['access_token'],
+                        'google_token' => json_encode($token),
                     ]);
                 }
 
