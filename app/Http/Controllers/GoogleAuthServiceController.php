@@ -32,7 +32,7 @@ class GoogleAuthServiceController extends Controller
     public function dashboard(): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
         $user = auth()->user();
-        $events = $user->events()->orderBy('created_at', 'desc')->paginate(30);
+        $events = $user->events()->orderBy('created_at', 'DESC')->paginate(30);
         return view('dashboard.index', compact('user', 'events'));
     }
 
