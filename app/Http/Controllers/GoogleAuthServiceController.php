@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Auth;
 
 class GoogleAuthServiceController extends Controller
 {
+    /**
+     * @param GoogleService $googleService
+     */
     public function __construct(
         protected GoogleService $googleService
     )
