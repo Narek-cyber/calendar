@@ -73,7 +73,7 @@ class GoogleAuthServiceController extends Controller
                         'google_id' => $googleUser->id,
                         'google_token' => json_encode($token),
                     ]);
-                } else {
+                } else if ($token) {
                     $localUser->update([
                         'google_token' => json_encode($token),
                     ]);
