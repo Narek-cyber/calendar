@@ -152,5 +152,12 @@
             @endforelse
             </tbody>
         </table>
+        <div class="mt-3">
+            <div class="d-flex">
+                @isset($events)
+                    {{ $events->links() }}
+                @endisset
+            </div>
+        </div>
     </div>
 @endsection
