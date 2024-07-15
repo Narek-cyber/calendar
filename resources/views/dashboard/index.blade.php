@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 @section('content')
     <div class="container">
-        <form action="{{ route('add.event') }}" method="POST">
+        <form action="{{ route('event.store') }}" method="POST">
             @csrf
             <div class="mb-3">
                 <label
@@ -118,7 +118,7 @@
                     <td class="d-flex">
                         <a
                             class="btn btn-success btn-sm"
-                            href="{{ route('edit.event', $event->id) }}"
+                            href="{{ route('event.edit', $event->id) }}"
                         >
                             Edit
                         </a>

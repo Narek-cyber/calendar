@@ -26,8 +26,8 @@ Route::get('/logout', [GoogleAuthServiceController::class, 'logout'])->name('log
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [GoogleAuthServiceController::class, 'dashboard'])->name('dashboard');
-    Route::post('/add-event', [GoogleCalendarServiceController::class, 'addGoogleCalendarEvent'])->name('add.event');
-    Route::get('/edit-event/{id}', [GoogleCalendarServiceController::class, 'editGoogleCalendarEvent'])->name('edit.event');
-    Route::put('/update-event/{id}', [GoogleCalendarServiceController::class, 'updateGoogleCalendarEvent'])->name('update.event');
+    Route::post('/add-event', [GoogleCalendarServiceController::class, 'addGoogleCalendarEvent'])->name('event.store');
+    Route::get('/edit-event/{id}', [GoogleCalendarServiceController::class, 'editGoogleCalendarEvent'])->name('event.edit');
+    Route::put('/update-event/{id}', [GoogleCalendarServiceController::class, 'updateGoogleCalendarEvent'])->name('event.update');
     Route::delete('/event/{id}', [GoogleCalendarServiceController::class, 'delete'])->name('event.delete');
 });

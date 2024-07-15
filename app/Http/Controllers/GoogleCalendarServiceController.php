@@ -16,6 +16,10 @@ use Exception;
 
 class GoogleCalendarServiceController extends Controller
 {
+    /**
+     * @param GoogleService $googleService
+     * @param GoogleCalendarEventService $googleEvent
+     */
     public function __construct(
         protected GoogleService $googleService,
         protected GoogleCalendarEventService $googleEvent

@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Auth;
 
 class GoogleAuthServiceController extends Controller
 {
+    /**
+     * @param GoogleService $googleService
+     */
     public function __construct(
         protected GoogleService $googleService
     )
@@ -91,6 +94,7 @@ class GoogleAuthServiceController extends Controller
         $user = auth()->user();
         $user->{'google_token'} = null;
         $user->save();
+        $this->googleService->revokeToken();
         Auth::logout();
         return redirect('/');
     }

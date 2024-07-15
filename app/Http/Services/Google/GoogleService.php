@@ -7,6 +7,9 @@ use Google_Service_Oauth2;
 
 class GoogleService
 {
+    /**
+     * @param Google_Client $client
+     */
     public function __construct(
         public Google_Client $client
     )
@@ -14,11 +17,14 @@ class GoogleService
         $this->client->setClientId(env('GOOGLE_CLIENT_ID'));
         $this->client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
         $this->client->setRedirectUri(env('GOOGLE_REDIRECT'));
-        $this->client->addScope('https://www.googleapis.com/auth/calendar.events.owned');
-        $this->client->addScope(Google_Service_Oauth2::USERINFO_PROFILE);
-        $this->client->addScope(Google_Service_Oauth2::USERINFO_EMAIL);
-        $this->client->addScope(Google_Service_Oauth2::OPENID);
+        $this->client->setScopes([
+            'https://www.googleapis.com/auth/calendar.events.owned',
+            Google_Service_Oauth2::USERINFO_PROFILE,
+            Google_Service_Oauth2::USERINFO_EMAIL,
+            Google_Service_Oauth2::OPENID,
+        ]);
         $this->client->setAccessType('offline');
+        $this->client->setPrompt('consent');
     }
 
     /**
@@ -27,5 +33,13 @@ class GoogleService
     public function getClient(): Google_Client
     {
         return $this->client;
+    }
+
+    /**
+     * Revoke the access token
+     */
+    public function revokeToken(): bool
+    {
+        return $this->client->revokeToken();
     }
 }
