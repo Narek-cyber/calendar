@@ -19,6 +19,7 @@ class GoogleService
         $this->client->addScope(Google_Service_Oauth2::USERINFO_EMAIL);
         $this->client->addScope(Google_Service_Oauth2::OPENID);
         $this->client->setAccessType('offline');
+        $this->client->setPrompt('consent');
     }
 
     /**
@@ -27,5 +28,13 @@ class GoogleService
     public function getClient(): Google_Client
     {
         return $this->client;
+    }
+
+    /**
+     * Revoke the access token
+     */
+    public function revokeToken(): bool
+    {
+        return $this->client->revokeToken();
     }
 }

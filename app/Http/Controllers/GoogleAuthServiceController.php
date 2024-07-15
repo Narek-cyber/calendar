@@ -91,6 +91,7 @@ class GoogleAuthServiceController extends Controller
         $user = auth()->user();
         $user->{'google_token'} = null;
         $user->save();
+        $this->googleService->revokeToken();
         Auth::logout();
         return redirect('/');
     }
