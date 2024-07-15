@@ -38,7 +38,9 @@ class GoogleCalendarServiceController extends Controller
         $this->googleService->getClient()->setAccessToken($accessToken);
 
         if ($this->googleService->getClient()->isAccessTokenExpired()) {
-            $newToken = $this->googleService->getClient()->fetchAccessTokenWithRefreshToken($this->googleService->getClient()->getRefreshToken());
+            $newToken = $this->googleService->getClient()->fetchAccessTokenWithRefreshToken(
+                $this->googleService->getClient()->getRefreshToken()
+            );
             $this->googleService->getClient()->setAccessToken($newToken);
             $user->update(['google_token' => json_encode($newToken)]);
         }

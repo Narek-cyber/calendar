@@ -1,7 +1,10 @@
 @extends('layouts.layout')
 @section('content')
     <div class="container">
-        <form action="{{ route('event.store') }}" method="POST">
+        <form
+            action="{{ route('event.store') }}"
+            method="POST"
+        >
             @csrf
             <div class="mb-3">
                 <label
@@ -89,7 +92,12 @@
                     </span>
                 @enderror
             </div>
-            <button type="submit" class="btn btn-primary">Add Google Calendar Event</button>
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Add Google Calendar Event
+            </button>
         </form>
     </div>
     <div class="container mt-5">
@@ -129,7 +137,8 @@
                             @csrf
                             @method('DELETE')
                             <button
-                                type="submit" class="btn btn-danger btn-sm"
+                                type="submit"
+                                class="btn btn-danger btn-sm"
                                 onclick="return confirm('Are you sure?')"
                             >
                                 Delete
@@ -138,19 +147,21 @@
                     </td>
                 </tr>
             @empty
-                <tr>
-                    <td>
-                        <p style="font-weight: bolder">No events yet</p>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                <td
+                    colspan="7"
+                    class="text-center fw-bold"
+                >
+                    No events yet
+                </td>
             @endforelse
             </tbody>
         </table>
+        <div class="mt-3">
+            <div class="d-flex">
+                @isset($events)
+                    {{ $events->links() }}
+                @endisset
+            </div>
+        </div>
     </div>
 @endsection
