@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
     <form
-        action="{{ route('update.event', $event->id) }}"
+        action="{{ route('event.update', $event->id) }}"
         method="POST"
     >
         @csrf

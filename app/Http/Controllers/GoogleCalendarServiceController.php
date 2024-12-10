@@ -16,6 +16,10 @@ use Exception;
 
 class GoogleCalendarServiceController extends Controller
 {
+    /**
+     * @param GoogleService $googleService
+     * @param GoogleCalendarEventService $googleEvent
+     */
     public function __construct(
         protected GoogleService $googleService,
         protected GoogleCalendarEventService $googleEvent
@@ -34,7 +38,9 @@ class GoogleCalendarServiceController extends Controller
         $this->googleService->getClient()->setAccessToken($accessToken);
 
         if ($this->googleService->getClient()->isAccessTokenExpired()) {
-            $newToken = $this->googleService->getClient()->fetchAccessTokenWithRefreshToken($this->googleService->getClient()->getRefreshToken());
+            $newToken = $this->googleService->getClient()->fetchAccessTokenWithRefreshToken(
+                $this->googleService->getClient()->getRefreshToken()
+            );
             $this->googleService->getClient()->setAccessToken($newToken);
             $user->update(['google_token' => json_encode($newToken)]);
         }

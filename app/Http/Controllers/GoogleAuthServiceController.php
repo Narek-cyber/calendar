@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Auth;
 
 class GoogleAuthServiceController extends Controller
 {
+    /**
+     * @param GoogleService $googleService
+     */
     public function __construct(
         protected GoogleService $googleService
     )
@@ -29,7 +32,7 @@ class GoogleAuthServiceController extends Controller
     public function dashboard(): Factory|Application|View|\Illuminate\Contracts\Foundation\Application
     {
         $user = auth()->user();
-        $events = $user->events()->orderBy('created_at', 'desc')->get();
+        $events = $user->events()->orderBy('created_at', 'DESC')->paginate(30);
         return view('dashboard.index', compact('user', 'events'));
     }
 
@@ -70,7 +73,7 @@ class GoogleAuthServiceController extends Controller
                         'google_id' => $googleUser->id,
                         'google_token' => json_encode($token),
                     ]);
-                } else {
+                } else if ($token) {
                     $localUser->update([
                         'google_token' => json_encode($token),
                     ]);
@@ -91,6 +94,7 @@ class GoogleAuthServiceController extends Controller
         $user = auth()->user();
         $user->{'google_token'} = null;
         $user->save();
+        $this->googleService->revokeToken();
         Auth::logout();
         return redirect('/');
     }
