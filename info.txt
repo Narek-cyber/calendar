@@ -1,0 +1,14 @@
+-- google cloud platform --
+triviabooking.work@gmail.com    trivia123456
+https://console.cloud.google.com/apis/credentials/oauthclient/311259014107-01707hrkerq6j4emlou8pccn6818a1bm.apps.googleusercontent.com?project=socialte-423413&supportedpurview=project
+https://console.cloud.google.com/apis/credentials?project=socialte-423413&supportedpurview=project
+
+to running php artisan serve
+
+-- facebook cloud platform --
+facebook.com(backgammon13@mail.ru,  hegel198813)
+https://developers.facebook.com/apps/
+https://developers.facebook.com/apps/1560683291447700/permissions/?use_case_enum=FB_LOGIN&from_dashboard=1
+https://developers.facebook.com/apps/1560683291447700/settings/basic/
+https://developers.facebook.com/apps/1560683291447700/fb-login/quickstart/?use_case_enum=FB_LOGIN
+https://www.youtube.com/watch?v=D7IPvwXBL4Q
